@@ -19,8 +19,8 @@ function polarToCartesian(
 ): { x: number; y: number } {
   const rad = ((angleDeg - 90) * Math.PI) / 180;
   return {
-    x: cx + r * Math.cos(rad),
-    y: cy + r * Math.sin(rad),
+    x: Math.round((cx + r * Math.cos(rad)) * 100) / 100,
+    y: Math.round((cy + r * Math.sin(rad)) * 100) / 100,
   };
 }
 
@@ -38,6 +38,7 @@ function describeSegment(
 }
 
 export default function SpinningWheel() {
+  const [mounted, setMounted] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
   const [result, setResult] = useState<number | null>(null);
@@ -45,6 +46,10 @@ export default function SpinningWheel() {
   const [showResult, setShowResult] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const segments = useMemo(() => {
     return Array.from({ length: NUM_SEGMENTS }, (_, i) => {
@@ -289,6 +294,7 @@ export default function SpinningWheel() {
             <svg
               viewBox="0 0 500 500"
               className="w-full h-full"
+              suppressHydrationWarning
             >
               {segments.map((seg, i) => (
                 <g key={i}>
